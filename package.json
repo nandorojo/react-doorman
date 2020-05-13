@@ -33,7 +33,6 @@
     "eslint-config-nando": "^1.0.7",
     "prettier": "^1.19.1",
     "react": "~16.9.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "typescript": "^3.7.5"
   },
   "bugs": {

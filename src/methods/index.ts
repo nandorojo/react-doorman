@@ -1,20 +1,13 @@
-import { PackageName, npmPackageName } from '../constants/index'
+import { PackageName } from '../constants'
 import * as firebase from 'firebase/app'
 // require('firebase/firestore')
 
 const { initializeApp } = firebase
 
 const InitializationErrorMessage = `
-
 ${PackageName} not properly initialized. Make sure you have code like this in your main App.js file:
 
-import { doorman } from '${npmPackageName}'
-
-doorman.initialize({
-	endpoint: ENDPOINT_YOU_GOT_FROM_DOORMAN_CLI
-})
-
-or give the endpoint to your <DoormanProvider /> component at the root of your app. 
+<DoormanProvider publicProjectId="your-id" /> or withPhoneAuth({ doorman: { publicProjectId: 'your-id' } }) component at the root of your app. 
 `
 
 type NotInitialized = {
