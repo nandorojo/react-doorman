@@ -1,11 +1,18 @@
-import React, { useContext, useEffect, useReducer, useCallback } from 'react'
-import { createContext, ReactNode } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useCallback,
+  createContext,
+  ReactNode,
+} from 'react'
 import { useCreateFirebaseAuthListener } from '../hooks/use-create-firebase-auth-listener'
 import { doorman, InitializationProps } from '../methods'
 import { theme as themeCreator } from '../style/theme'
-import { isPossiblePhoneNumber } from 'react-phone-number-input'
+
 import { isTestPhoneNumber } from '../utils/is-test-phone-number'
 import * as firebase from 'firebase'
+import { isPossiblePhoneNumber } from 'react-phone-number-input'
 
 type Context = null | {
   user: null | firebase.User
