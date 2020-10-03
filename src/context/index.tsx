@@ -11,7 +11,7 @@ import { doorman, InitializationProps } from '../methods'
 import { theme as themeCreator } from '../style/theme'
 
 import { isTestPhoneNumber } from '../utils/is-test-phone-number'
-import * as firebase from 'firebase'
+import * as firebase from 'firebase/app'
 import { isPossiblePhoneNumber } from 'react-phone-number-input'
 
 type Context = null | {
