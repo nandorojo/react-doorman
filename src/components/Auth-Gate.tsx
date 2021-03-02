@@ -1,5 +1,6 @@
 import { useDoormanContext } from '../context'
 import { PackageName } from '../constants'
+import type firebase from 'firebase/app'
 
 type Props = {
   children: (props: {
