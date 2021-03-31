@@ -1,5 +1,5 @@
 import { PackageName } from '../constants'
-import * as firebase from 'firebase/app'
+import firebase from 'firebase/app'
 // require('firebase/firestore')
 
 const { initializeApp } = firebase
