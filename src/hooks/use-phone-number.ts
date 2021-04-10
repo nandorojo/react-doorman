@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react'
 import { doorman } from '../methods'
 import { useAuthFlowState } from './use-auth-flow-state'
-
+import { isPossiblePhoneNumber } from 'react-phone-number-input'
 interface Props {
   phoneNumber?: string
   onChangePhoneNumber?: (phoneNumber: string) => void
@@ -30,7 +30,9 @@ export function usePhoneNumber(props: Props) {
   const onChangePhoneNumber: onChangePhoneNumber = useCallback(
     ({ phoneNumber = '' }) => {
       setLoading(false)
-      setPhoneNumber(phoneNumber)
+      setPhoneNumber(phoneNumber, {
+        isPossiblePhoneNumber: isPossiblePhoneNumber(phoneNumber),
+      })
     },
     [setPhoneNumber]
   )

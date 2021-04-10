@@ -12,13 +12,13 @@ import { useDoormanContext } from '../context'
  * If `ready` is true, it shows the code screen. Otherwise, it shows the phone screen.
  */
 export const useAuthFlowState = () => {
-	const context = useDoormanContext()
+  const context = useDoormanContext()
 
-	if (!context) {
-		throw new Error(
-			'🚨🚪 Doorman error in useAuthFlowState hook. Tried to access the Doorman context, but it does not exist. This probably means your app does not have the <DoormanProvider /> at the root of it, OR that your app is not wrapped with the `withAuthFlow` function. \n\nFor more details, see the example in the Doorman docs: https://docs.doorman.cool/introduction/quick-example'
-		)
-	}
+  if (!context) {
+    throw new Error(
+      '🚨🚪 Doorman error in useAuthFlowState hook. Tried to access the Doorman context, but it does not exist. This probably means your app does not have the <DoormanProvider /> at the root of it, OR that your app is not wrapped with the `withAuthFlow` function. \n\nFor more details, see the example in the Doorman docs: https://docs.doorman.cool/introduction/quick-example'
+    )
+  }
 
-	return context.authFlowState
+  return context
 }

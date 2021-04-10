@@ -5,6 +5,7 @@ import React, {
   useCallback,
   createContext,
   ReactNode,
+  useMemo,
 } from 'react'
 import { useCreateFirebaseAuthListener } from '../hooks/use-create-firebase-auth-listener'
 import { doorman, InitializationProps } from '../methods'
@@ -12,18 +13,29 @@ import { theme as themeCreator } from '../style/theme'
 
 import { isTestPhoneNumber } from '../utils/is-test-phone-number'
 import type firebase from 'firebase/app'
-import { isPossiblePhoneNumber } from 'react-phone-number-input'
+// import { isPossiblePhoneNumber } from 'react-phone-number-input'
 
-type Context = null | {
-  user: null | firebase.User
-  loading: boolean
-  theme?: ReturnType<typeof themeCreator>
-  authFlowState: AuthFlowState & {
-    authenticateApp: () => void
-    onChangePhoneNumber: (phoneNumber: string) => void
-    setCodeScreenReady: (ready: boolean) => void
-  }
+type AuthFlowContext = AuthFlowState & {
+  authenticateApp: () => void
+  onChangePhoneNumber: (
+    phoneNumber: string,
+    { isPossiblePhoneNumber }: { isPossiblePhoneNumber: boolean }
+  ) => void
+  setCodeScreenReady: (ready: boolean) => void
 }
+
+type Context =
+  | null
+  | ({
+      user: null | firebase.User
+      loading: boolean
+      theme?: ReturnType<typeof themeCreator>
+      // authFlowState: AuthFlowState & {
+      //   authenticateApp: () => void
+      //   onChangePhoneNumber: (phoneNumber: string, { isPossiblePhoneNumber }: { isPossiblePhoneNumber: boolean }) => void
+      //   setCodeScreenReady: (ready: boolean) => void
+      // }
+    } & AuthFlowContext)
 
 export type ProviderProps = {
   theme?: ReturnType<typeof themeCreator>
@@ -50,7 +62,11 @@ type AuthFlowState = {
 }
 
 type AuthFlowStateAction =
-  | { type: 'UPDATE_PHONE_NUMBER'; phoneNumber: string }
+  | {
+      type: 'UPDATE_PHONE_NUMBER'
+      phoneNumber: string
+      isPossiblePhoneNumber: boolean
+    }
   | { type: 'SET_READY'; ready: boolean }
 
 const authFlowStateReducer = (
@@ -68,8 +84,8 @@ const authFlowStateReducer = (
         ...state,
         phoneNumber: action.phoneNumber,
         isValidPhoneNumber:
-          isPossiblePhoneNumber(action.phoneNumber) ||
-          isTestPhoneNumber(action.phoneNumber),
+          action.isPossiblePhoneNumber || isTestPhoneNumber(action.phoneNumber),
+        // isPossiblePhoneNumber(action.phoneNumber) ||
       }
     default:
       throw new Error(
@@ -91,11 +107,7 @@ const authFlowStateReducer = (
  */
 const useCreateAuthFlowState = (props?: {
   initialPhoneNumber?: string
-}): AuthFlowState & {
-  authenticateApp: () => void
-  onChangePhoneNumber: (phoneNumber: string) => void
-  setCodeScreenReady: (ready: boolean) => void
-} => {
+}): AuthFlowContext => {
   const [authState, dispatch] = useReducer(authFlowStateReducer, {
     phoneNumber: props?.initialPhoneNumber ?? '+1',
     ready: false,
@@ -105,9 +117,19 @@ const useCreateAuthFlowState = (props?: {
   const authenticateApp = useCallback(() => {
     dispatch({ type: 'SET_READY', ready: false })
   }, [])
-  const onChangePhoneNumber = useCallback((phoneNumber: string) => {
-    dispatch({ type: 'UPDATE_PHONE_NUMBER', phoneNumber })
-  }, [])
+  const onChangePhoneNumber = useCallback(
+    (
+      phoneNumber: string,
+      { isPossiblePhoneNumber }: { isPossiblePhoneNumber: boolean }
+    ) => {
+      dispatch({
+        type: 'UPDATE_PHONE_NUMBER',
+        phoneNumber,
+        isPossiblePhoneNumber,
+      })
+    },
+    []
+  )
   const setCodeScreenReady = useCallback(
     (ready: boolean) => dispatch({ type: 'SET_READY', ready }),
     []
@@ -128,11 +150,18 @@ export function DoormanProvider({
   theme = themeCreator(),
   initialPhoneNumber,
 }: ProviderProps & InitializationProps) {
-  const authFlowState = useCreateAuthFlowState({ initialPhoneNumber })
-  const auth = useCreateFirebaseAuthListener({
-    onAuthStateChanged: user => {
+  const {
+    phoneNumber,
+    ready,
+    isValidPhoneNumber,
+    authenticateApp,
+    onChangePhoneNumber,
+    setCodeScreenReady,
+  } = useCreateAuthFlowState({ initialPhoneNumber })
+  const { user, loading } = useCreateFirebaseAuthListener({
+    onAuthStateChanged: (user) => {
       onAuthStateChangedProp?.(user)
-      authFlowState.setCodeScreenReady(false)
+      setCodeScreenReady(false)
     },
   })
 
@@ -140,10 +169,33 @@ export function DoormanProvider({
     doorman.initialize({ publicProjectId })
   }, [publicProjectId])
 
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      theme,
+      phoneNumber,
+      ready,
+      isValidPhoneNumber,
+      authenticateApp,
+      onChangePhoneNumber,
+      setCodeScreenReady,
+    }),
+    [
+      user,
+      loading,
+      theme,
+      phoneNumber,
+      ready,
+      isValidPhoneNumber,
+      authenticateApp,
+      onChangePhoneNumber,
+      setCodeScreenReady,
+    ]
+  )
+
   return (
-    <DoormanContext.Provider value={{ ...auth, theme, authFlowState }}>
-      {children}
-    </DoormanContext.Provider>
+    <DoormanContext.Provider value={value}>{children}</DoormanContext.Provider>
   )
 }
 
