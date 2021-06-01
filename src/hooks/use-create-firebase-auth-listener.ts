@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import firebase from 'firebase/app'
+import type firebase from 'firebase/app'
 import { empty } from '../utils/empty'
+import { onIdTokenChangedHeadless } from '../methods/headless'
 
 type Props = {
   onAuthStateChanged?: (user: firebase.User | null) => void
@@ -18,11 +19,16 @@ export function useCreateFirebaseAuthListener(
   })
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onIdTokenChanged(auth => {
+    const unsubscribe = onIdTokenChangedHeadless((auth) => {
       callback.current?.(auth)
       setUser(auth)
       setLoading(false)
     })
+    // const unsubscribe = firebase.auth().onIdTokenChanged(auth => {
+    //   callback.current?.(auth)
+    //   setUser(auth)
+    //   setLoading(false)
+    // })
     return () => unsubscribe()
   }, [])
 

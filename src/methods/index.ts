@@ -1,8 +1,8 @@
 import { PackageName } from '../constants'
-import firebase from 'firebase/app'
+import type firebase from 'firebase/app'
 // require('firebase/firestore')
 
-const { initializeApp } = firebase
+// const { initializeApp } = firebase
 
 const InitializationErrorMessage = `
 ${PackageName} not properly initialized. Make sure you have code like this in your main App.js file:
@@ -63,7 +63,7 @@ const post = (body: object) =>
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
-  }).then(r => r.json())
+  }).then((r) => r.json())
 
 const uploadError = (message: string) => {
   return post({
@@ -74,22 +74,17 @@ const uploadError = (message: string) => {
   })
 }
 
-const initialize = ({
-  publicProjectId,
-  firebaseConfig,
-}: {
-  firebaseConfig?: Parameters<typeof initializeApp>['0']
-} & InitializationProps) => {
+const initialize = ({ publicProjectId }: InitializationProps) => {
   configuration = {
     ...configuration,
     hasInitialized: true,
     publicProjectId,
   }
-  if (firebaseConfig) {
-    return !firebase.apps.length
-      ? firebase.initializeApp(firebaseConfig).firestore()
-      : firebase.app().firestore()
-  }
+  // if (firebaseConfig) {
+  //   return !firebase.apps.length
+  //     ? firebase.initializeApp(firebaseConfig).firestore()
+  //     : firebase.app().firestore()
+  // }
   return null
 }
 
@@ -161,46 +156,46 @@ const verifyCode = async ({
   }
 }
 
-const doesUserExist = async (user: { uid: string }) => {
-  return await firebase
-    .firestore()
-    .collection(UsersCollection)
-    .doc(user.uid)
-    .get()
-    .then(doc => doc.exists)
-}
+// const doesUserExist = async (user: { uid: string }) => {
+//   return await firebase
+//     .firestore()
+//     .collection(UsersCollection)
+//     .doc(user.uid)
+//     .get()
+//     .then((doc) => doc.exists)
+// }
 
-const addUserToDb = async (user: firebase.User) => {
-  return await firebase
-    .firestore()
-    .collection(UsersCollection)
-    .doc(user.uid)
-    .set(user, { merge: true })
-}
+// const addUserToDb = async (user: firebase.User) => {
+//   return await firebase
+//     .firestore()
+//     .collection(UsersCollection)
+//     .doc(user.uid)
+//     .set(user, { merge: true })
+// }
 
-const getUser = async (user: { uid: string }) => {
-  return await firebase
-    .firestore()
-    .collection(UsersCollection)
-    .doc(user.uid)
-    .get()
-    .then(doc => doc.data())
-}
+// const getUser = async (user: { uid: string }) => {
+//   return await firebase
+//     .firestore()
+//     .collection(UsersCollection)
+//     .doc(user.uid)
+//     .get()
+//     .then((doc) => doc.data())
+// }
 
-const updateUserDisplayName = async ({
-  displayName,
-}: {
-  displayName: string
-}) => {
-  return firebase.auth().currentUser?.updateProfile({ displayName })
-}
+// const updateUserDisplayName = async ({
+//   displayName,
+// }: {
+//   displayName: string
+// }) => {
+//   return firebase.auth().currentUser?.updateProfile({ displayName })
+// }
 
 export const doorman = {
   initialize,
   signInWithPhoneNumber,
   verifyCode,
-  doesUserExist,
-  addUserToDb,
-  getUser,
-  updateUserDisplayName,
+  // doesUserExist,
+  // addUserToDb,
+  // getUser,
+  // updateUserDisplayName,
 }
