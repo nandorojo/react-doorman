@@ -12,6 +12,7 @@ export let signInWithCustomTokenHeadless = (
     ReturnType<typeof Firebase8['auth']>['signInWithCustomToken']
   >[0]
 ) => {
+  require('firebase/auth')
   const firebase8: typeof Firebase8 = require('firebase/app')
   return firebase8.auth().signInWithCustomToken(token)
 }
@@ -19,6 +20,7 @@ export let signInWithCustomTokenHeadless = (
 export let signOutHeadless: ReturnType<
   typeof Firebase8['auth']
 >['signOut'] = () => {
+  require('firebase/auth')
   const firebase8: typeof Firebase8 = require('firebase/app')
   return firebase8.auth().signOut()
 }
