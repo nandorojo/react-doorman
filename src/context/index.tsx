@@ -50,7 +50,7 @@ export type ProviderProps = {
   initialPhoneNumber?: string
 }
 
-const DoormanContext = createContext<Context>(null)
+export const DoormanContext = createContext<Context>(null)
 
 type AuthFlowState = {
   phoneNumber: string
