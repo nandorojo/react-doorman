@@ -1,7 +1,7 @@
 import type firebase from 'firebase/app'
 
 import { PackageName } from '../constants'
-import { useDoormanContext } from '../context'
+import { useUserContext } from '../context'
 
 type Props = {
   children: (props: {
@@ -11,7 +11,7 @@ type Props = {
 }
 
 export function AuthGate({ children }: Props) {
-  const authGate = useDoormanContext()
+  const authGate = useUserContext()
 
   if (authGate) {
     return children(authGate)

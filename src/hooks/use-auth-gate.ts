@@ -1,16 +1,16 @@
-import { useDoormanContext } from '../context'
+import { useUserContext } from '../context'
 
 export const useAuthGate = () => {
-	const authGate = useDoormanContext()
+  const userContext = useUserContext()
 
-	if (!authGate) {
-		throw new Error(
-			'👋Doorman useAuthGate hook error. useAuthGate was called in a component before the Doorman context was created. \n\nMake sure that your app is wrapped with DoormanProvider or withPhoneAuth.'
-		)
-	}
+  if (!userContext) {
+    throw new Error(
+      '👋Doorman useAuthGate hook error. useAuthGate was called in a component before the Doorman context was created. \n\nMake sure that your app is wrapped with DoormanProvider or withPhoneAuth.'
+    )
+  }
 
-	return {
-		loading: authGate.loading,
-		user: authGate.user,
-	}
+  return {
+    loading: userContext.loading,
+    user: userContext.user,
+  }
 }

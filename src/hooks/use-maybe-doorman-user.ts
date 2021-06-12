@@ -1,4 +1,4 @@
-import { useDoormanContext } from '../context'
+import { useUserContext } from '../context'
 import firebase from 'firebase/app'
 
 const signOut = () => firebase.auth().signOut()
@@ -7,6 +7,6 @@ export function useMaybeDoormanUser(): [
   firebase.User | null,
   () => Promise<void>
 ] {
-  const user: firebase.User | null = useDoormanContext()?.user ?? null
+  const user = useUserContext()?.user ?? null
   return [user, signOut]
 }
