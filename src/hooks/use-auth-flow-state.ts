@@ -1,4 +1,4 @@
-import { useDoormanContext } from '../context'
+import { useAuthFlowContext } from '../context'
 
 /**
  * `useAuthFlowState`
@@ -12,7 +12,7 @@ import { useDoormanContext } from '../context'
  * If `ready` is true, it shows the code screen. Otherwise, it shows the phone screen.
  */
 export const useAuthFlowState = () => {
-  const context = useDoormanContext()
+  const context = useAuthFlowContext()
 
   if (!context) {
     throw new Error(

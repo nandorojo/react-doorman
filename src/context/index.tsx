@@ -1,19 +1,19 @@
+/* eslint-disable flowtype/no-types-missing-file-annotation */
+import type firebase from 'firebase/app'
 import React, {
   useContext,
   useEffect,
   useReducer,
   useCallback,
   createContext,
-  ReactNode,
   useMemo,
+  ReactNode,
 } from 'react'
+
 import { useCreateFirebaseAuthListener } from '../hooks/use-create-firebase-auth-listener'
 import { doorman, InitializationProps } from '../methods'
 import { theme as themeCreator } from '../style/theme'
-
 import { isTestPhoneNumber } from '../utils/is-test-phone-number'
-import type firebase from 'firebase/app'
-// import { isPossiblePhoneNumber } from 'react-phone-number-input'
 
 type AuthFlowContext = AuthFlowState & {
   authenticateApp: () => void
@@ -24,18 +24,21 @@ type AuthFlowContext = AuthFlowState & {
   setCodeScreenReady: (ready: boolean) => void
 }
 
-type Context =
-  | null
-  | ({
-      user: null | firebase.User
-      loading: boolean
-      theme?: ReturnType<typeof themeCreator>
-      // authFlowState: AuthFlowState & {
-      //   authenticateApp: () => void
-      //   onChangePhoneNumber: (phoneNumber: string, { isPossiblePhoneNumber }: { isPossiblePhoneNumber: boolean }) => void
-      //   setCodeScreenReady: (ready: boolean) => void
-      // }
-    } & AuthFlowContext)
+type UserContext = {
+  user: null | firebase.User
+  loading: boolean
+  theme?: ReturnType<typeof themeCreator>
+}
+
+// type Context =
+//   | null
+//   | ({
+//       // authFlowState: AuthFlowState & {
+//       //   authenticateApp: () => void
+//       //   onChangePhoneNumber: (phoneNumber: string, { isPossiblePhoneNumber }: { isPossiblePhoneNumber: boolean }) => void
+//       //   setCodeScreenReady: (ready: boolean) => void
+//       // }
+//     } & AuthFlowContext)
 
 export type ProviderProps = {
   theme?: ReturnType<typeof themeCreator>
@@ -50,7 +53,8 @@ export type ProviderProps = {
   initialPhoneNumber?: string
 }
 
-const DoormanContext = createContext<Context>(null)
+export const AuthFlowContext = createContext<AuthFlowContext | null>(null)
+export const UserContext = createContext<UserContext | null>(null)
 
 type AuthFlowState = {
   phoneNumber: string
@@ -169,44 +173,40 @@ export function DoormanProvider({
     doorman.initialize({ publicProjectId })
   }, [publicProjectId])
 
-  const value = useMemo(
-    () => ({
-      user,
-      loading,
-      theme,
-      phoneNumber,
-      ready,
-      isValidPhoneNumber,
-      authenticateApp,
-      onChangePhoneNumber,
-      setCodeScreenReady,
-    }),
-    [
-      user,
-      loading,
-      theme,
-      phoneNumber,
-      ready,
-      isValidPhoneNumber,
-      authenticateApp,
-      onChangePhoneNumber,
-      setCodeScreenReady,
-    ]
-  )
-
   return (
-    <DoormanContext.Provider value={value}>{children}</DoormanContext.Provider>
+    <UserContext.Provider
+      value={useMemo(() => ({ user, loading, theme }), [user, loading, theme])}
+    >
+      <AuthFlowContext.Provider
+        value={useMemo(
+          () => ({
+            phoneNumber,
+            ready,
+            isValidPhoneNumber,
+            authenticateApp,
+            onChangePhoneNumber,
+            setCodeScreenReady,
+          }),
+          [
+            phoneNumber,
+            ready,
+            isValidPhoneNumber,
+            authenticateApp,
+            onChangePhoneNumber,
+            setCodeScreenReady,
+          ]
+        )}
+      >
+        {children}
+      </AuthFlowContext.Provider>
+    </UserContext.Provider>
   )
 }
 
-export function Doorman({
-  children,
-}: {
-  children: (context: Context) => ReactNode
-}) {
-  return <DoormanContext.Consumer>{children}</DoormanContext.Consumer>
+export function useAuthFlowContext() {
+  return useContext(AuthFlowContext)
 }
 
-export function useDoormanContext() {
-  return useContext(DoormanContext)
+export function useUserContext() {
+  return useContext(UserContext)
 }
