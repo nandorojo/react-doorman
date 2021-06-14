@@ -2,7 +2,7 @@ import type Firebase8 from 'firebase/app'
 import { HeadlessFirebaseUser } from '../types/headless-types'
 
 type OnIdTokenChangedHeadless = (
-  callback: (user: HeadlessFirebaseUser) => void
+  callback: (user: HeadlessFirebaseUser | null) => void
 ) => () => void
 
 type OnIdTokenChanged = ReturnType<typeof Firebase8['auth']>['onIdTokenChanged']
