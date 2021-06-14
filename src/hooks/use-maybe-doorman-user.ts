@@ -1,9 +1,9 @@
 import { useUserContext } from '../context'
-import type firebase from 'firebase/app'
 import { signOutHeadless } from '../methods/headless'
+import { HeadlessFirebaseUser } from '../types/headless-types'
 
 export function useMaybeDoormanUser(): [
-  firebase.User | null,
+  HeadlessFirebaseUser | null,
   () => Promise<void>
 ] {
   const user = useUserContext()?.user ?? null

@@ -1,5 +1,4 @@
 /* eslint-disable flowtype/no-types-missing-file-annotation */
-import type firebase from 'firebase/app'
 import React, {
   useContext,
   useEffect,
@@ -13,6 +12,7 @@ import React, {
 import { useCreateFirebaseAuthListener } from '../hooks/use-create-firebase-auth-listener'
 import { doorman, InitializationProps } from '../methods'
 import { theme as themeCreator } from '../style/theme'
+import type { HeadlessFirebaseUser } from '../types/headless-types'
 import { isTestPhoneNumber } from '../utils/is-test-phone-number'
 
 type AuthFlowContext = AuthFlowState & {
@@ -25,7 +25,7 @@ type AuthFlowContext = AuthFlowState & {
 }
 
 type UserContext = {
-  user: null | firebase.User
+  user: null | HeadlessFirebaseUser
   loading: boolean
   theme?: ReturnType<typeof themeCreator>
 }
@@ -43,7 +43,7 @@ type UserContext = {
 export type ProviderProps = {
   theme?: ReturnType<typeof themeCreator>
   children: ReactNode
-  onAuthStateChanged?: (user: firebase.User | null) => void
+  onAuthStateChanged?: (user: HeadlessFirebaseUser | null) => void
   /**
    * (Optional) The initial state of the phone number field.
    * If you aren't based in the US, you may want to set this to the prefix of your country.
