@@ -31,6 +31,7 @@ export function usePhoneNumber(props: Props) {
   const onChangePhoneNumber: onChangePhoneNumber = useCallback(
     ({ phoneNumber = '' }) => {
       setLoading(false)
+      setError(null)
       setPhoneNumber(phoneNumber, {
         isPossiblePhoneNumber: isPossiblePhoneNumber(phoneNumber),
       })
@@ -41,6 +42,7 @@ export function usePhoneNumber(props: Props) {
   const submitPhone = useCallback(async () => {
     try {
       setLoading(true)
+      setError(null)
 
       const { success, error } = await doorman.signInWithPhoneNumber({
         phoneNumber,
