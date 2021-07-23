@@ -1,7 +1,7 @@
 {
   "name": "react-doorman",
   "description": "Core library used by react-native-doorman for Firebase phone auth. This doesn't have UI components – it's meant to let non-React Native apps use Doorman's convenience hooks & components without the dependencies.",
-  "version": "2.2.0-alpha.1",
+  "version": "2.2.0-alpha.2",
   "main": "build/index.js",
   "react-native": "src/index.ts",
   "types": "build/index.d.ts",
