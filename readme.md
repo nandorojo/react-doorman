@@ -8,9 +8,11 @@
 
 v1 requires Firebase 8.
 
-v2 (alpha) comes with headless mode, to allow users to customize usage for Firebase Web v9, and react-native-firebase.
+v2 (alpha) comes with headless mode, to allow users to customize usage for react-native-firebase.
 
-Firebase v9 example usage with Doorman v2:
+To use with Firebase v9, you need v3.
+
+Firebase v9 example usage with Doorman v3:
 
 ```js
 // App.js

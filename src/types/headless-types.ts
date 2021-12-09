@@ -1,6 +1,4 @@
-import type firebase8 from 'firebase/app'
-import type * as Native from '@react-native-firebase/auth'
+import type { FirebaseAuthTypes } from '@react-native-firebase/auth'
+import type { User } from 'firebase/auth'
 
-export type HeadlessFirebaseUser =
-  | firebase8.User
-  | Native.FirebaseAuthTypes.User
+export type HeadlessFirebaseUser = User | FirebaseAuthTypes.User

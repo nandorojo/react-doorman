@@ -1,22 +1,13 @@
-import type Firebase8 from 'firebase/app'
 import { HeadlessFirebaseUser } from '../types/headless-types'
 
 type OnIdTokenChangedHeadless = (
   callback: (user: HeadlessFirebaseUser | null) => void
 ) => () => void
 
-type OnIdTokenChanged = ReturnType<typeof Firebase8['auth']>['onIdTokenChanged']
-
 export let onIdTokenChangedHeadless: OnIdTokenChangedHeadless = (callback) => {
-  const firebase8: typeof Firebase8 = require('firebase/app').default
-  return firebase8
-    .auth()
-    .onIdTokenChanged(callback as Parameters<OnIdTokenChanged>[0])
+  const firebase = require('firebase/auth') as typeof import('firebase/auth')
+  return firebase.getAuth().onIdTokenChanged(callback)
 }
-
-type SignInWithCustomToken = Parameters<
-  ReturnType<typeof Firebase8['auth']>['signInWithCustomToken']
->[0]
 
 type SignInWithCustomTokenHeadless = (
   token: string
@@ -25,15 +16,14 @@ type SignInWithCustomTokenHeadless = (
 export let signInWithCustomTokenHeadless: SignInWithCustomTokenHeadless = (
   token
 ) => {
-  const firebase8: typeof Firebase8 = require('firebase/app').default
-  return firebase8.auth().signInWithCustomToken(token)
+  const firebase = require('firebase/auth') as typeof import('firebase/auth')
+  const auth = firebase.getAuth()
+  return firebase.signInWithCustomToken(auth, token)
 }
 
-type SignOut = ReturnType<typeof Firebase8['auth']>['signOut']
-
-export let signOutHeadless: SignOut = () => {
-  const firebase8: typeof Firebase8 = require('firebase/app').default
-  return firebase8.auth().signOut()
+export let signOutHeadless = () => {
+  const auth = (require('firebase/auth') as typeof import('firebase/auth')).getAuth()
+  return auth.signOut()
 }
 
 export function makeHeadless({
