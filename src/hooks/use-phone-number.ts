@@ -25,11 +25,13 @@ export function usePhoneNumber(props: Props) {
   } = useAuthFlowState()
   // const [valid, setValid] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const { onSmsSuccessfullySent, onSmsError } = props
 
   const onChangePhoneNumber: onChangePhoneNumber = useCallback(
     ({ phoneNumber = '' }) => {
       setLoading(false)
+      setError(null)
       setPhoneNumber(phoneNumber, {
         isPossiblePhoneNumber: isPossiblePhoneNumber(phoneNumber),
       })
@@ -40,6 +42,7 @@ export function usePhoneNumber(props: Props) {
   const submitPhone = useCallback(async () => {
     try {
       setLoading(true)
+      setError(null)
 
       const { success, error } = await doorman.signInWithPhoneNumber({
         phoneNumber,
@@ -52,6 +55,11 @@ export function usePhoneNumber(props: Props) {
       console.error('usePhoneNumber failed', e)
       setLoading(false)
       onSmsError?.(e)
+      if (typeof e === 'string') {
+        setError(e)
+      } else if (typeof e === 'object' && e.message) {
+        setError(e.message)
+      }
     }
   }, [onSmsError, onSmsSuccessfullySent, phoneNumber])
 
@@ -65,5 +73,6 @@ export function usePhoneNumber(props: Props) {
     submitPhone,
     valid: isValidPhoneNumber,
     loading,
+    error,
   }
 }

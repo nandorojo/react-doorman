@@ -4,7 +4,42 @@
 
 <img src="https://gblobscdn.gitbook.com/assets%2F-M2lDpPbJsb_nHH5pJG0%2F-M2oEU_90gruqVYYM49_%2F-M2oEZ8mrfBxl3VrI17c%2Fjohannes-plenio-sPt5RIjKfpk-unsplash.jpg?alt=media&token=743c4f1d-9045-4d54-bb3a-852e45c6704f" />
 
+## Compatibility
+
 v1 requires Firebase 8.
+
+v2 (alpha) comes with headless mode, to allow users to customize usage for react-native-firebase.
+
+To use with Firebase v9, you need v3.
+
+Firebase v9 example usage with Doorman v3:
+
+```js
+// App.js
+import { makeHeadless } from 'react-doorman'
+import { withPhoneAuth } from 'react-native-doorman'
+import { getAuth, onIdTokenChanged, initializeApp } from 'firebase/auth'
+
+const firebaseConfig = {
+  //...
+}
+const firebaseApp = initializeApp(firebaseConfig)
+
+// Call this at the root of your app before using doorman
+makeHeadless({
+  signOut: () => {
+    return getAuth(firebaseApp).signOut()
+  },
+  onIdTokenChanged: (callback) => {
+    return getAuth(firebaseApp).onIdTokenChanged(callback)
+  },
+  signInWithCustomToken: (token) => {
+    return getAuth(firebaseApp).signInWithCustomToken(token)
+  },
+})
+
+export default withPhoneAuth(App)
+```
 
 ## 🧐 What is Doorman?
 

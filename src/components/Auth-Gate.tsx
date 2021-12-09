@@ -1,12 +1,11 @@
-import type firebase from 'firebase/app'
-
 import { PackageName } from '../constants'
 import { useUserContext } from '../context'
+import type { HeadlessFirebaseUser } from '../types/headless-types'
 
 type Props = {
   children: (props: {
     loading: boolean
-    user: firebase.User | null
+    user: HeadlessFirebaseUser | null
   }) => JSX.Element
 }
 
